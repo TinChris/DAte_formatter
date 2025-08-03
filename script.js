@@ -8,22 +8,26 @@ const year = date.getFullYear();
 const hours = date.getHours();
 const minutes = date.getMinutes();
 
-const formattedDate = `${day}-${month}-${year}`;
-currentDateParagraph.textContent = formattedDate;
+// Hilfsfunktion: Zahlen < 10 bekommen eine führende Null
+const padZero = (num) => (num < 10 ? `0${num}` : num);
 
-dateOptionsSelectElement.addEventListener("change", () => {
-
-  switch (dateOptionsSelectElement.value) {
+// Funktion, um das Datum abhängig vom Format zu formatieren
+const formatDate = (format) => {
+  switch (format) {
     case "yyyy-mm-dd":
-      currentDateParagraph.textContent = formattedDate
-        .split("-")
-        .reverse()
-        .join("-");
-      break;
+      return `${year}-${padZero(month)}-${padZero(day)}`;
     case "mm-dd-yyyy-h-mm":
-      currentDateParagraph.textContent = `${month}-${day}-${year} ${hours} Hours ${minutes} Minutes`;
-      break;
+      return `${padZero(month)}-${padZero(day)}-${year} ${padZero(hours)} Hours ${padZero(minutes)} Minutes`;
+    case "dd-mm-yyyy":
     default:
-    currentDateParagraph.textContent = formattedDate;
+      return `${padZero(day)}-${padZero(month)}-${year}`;
   }
+};
+
+// Initiale Anzeige passend zum aktuell ausgewählten Format
+currentDateParagraph.textContent = formatDate(dateOptionsSelectElement.value);
+
+// Event Listener für Dropdown-Änderungen
+dateOptionsSelectElement.addEventListener("change", () => {
+  currentDateParagraph.textContent = formatDate(dateOptionsSelectElement.value);
 });
